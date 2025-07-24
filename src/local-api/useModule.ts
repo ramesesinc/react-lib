@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import Platform from "../common/platform";
+import { Platform } from "../common/platform";
 import localAPI from "./api";
 
 class UseModuleClass {

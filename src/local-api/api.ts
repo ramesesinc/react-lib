@@ -1,4 +1,4 @@
-import Platform from "../common/platform";
+import { Platform } from "../common/platform";
 import AxiosBuilder, { AxiosBuilderCallback } from "../axios/axios-builder";
 
 const __LOCAL_API_KEY__ = "4e3b5a2c-9c74-4e10-9c76-3a3deec6d3c2"; 

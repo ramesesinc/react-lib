@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import Platform from "../common/platform";
+import { Platform } from "../common/platform";
 import localAPI from "./api";
 
 type UseModuleDataProps = {
@@ -37,10 +37,10 @@ class UseModuleClass {
 
     async resolve( props: UseModuleResolveProps ) {
         const { serviceid, action } = props; 
-        const path = `/services/exec/${this.tenant}/${this.module}/${serviceid}/${action}`;
+        const path = `/services/resolve/${this.tenant}/${this.module}/${serviceid}/${action}`;
         const resp = await this.client.get( path ); 
-        const { data: respData } = resp ?? {}; 
-        return respData; 
+        const { data } = resp ?? {}; 
+        return data; 
     } 
 } 
 

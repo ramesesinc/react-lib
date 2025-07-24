@@ -1,40 +1,39 @@
 {
   "name": "@ramesesinc/lib",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Reusable Shared Libraries",
   "author": "Rameses Systems Inc.",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./axios": {
-      "import": "./dist/axios/index.mjs",
+      "import": "./dist/axios/index.js",
       "require": "./dist/axios/index.js",
       "types": "./dist/axios/index.d.ts"
     },
     "./client": {
-      "import": "./dist/client/index.mjs",
+      "import": "./dist/client/index.js",
       "require": "./dist/client/index.js",
       "types": "./dist/client/index.d.ts"
     },
     "./local-api": {
-      "import": "./dist/local-api/index.mjs",
+      "import": "./dist/local-api/index.js",
       "require": "./dist/local-api/index.js",
       "types": "./dist/local-api/index.d.ts"
     },
     "./mgmt-api": {
-      "import": "./dist/mgmt-api/index.mjs",
+      "import": "./dist/mgmt-api/index.js",
       "require": "./dist/mgmt-api/index.js",
       "types": "./dist/mgmt-api/index.d.ts"
     },
     "./server": {
-      "import": "./dist/server/index.mjs",
+      "import": "./dist/server/index.js",
       "require": "./dist/server/index.js",
       "types": "./dist/server/index.d.ts"
     }
@@ -43,16 +42,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsc --build",
     "clean": "rm -rf dist",
-    "dev": "tsup --watch",
+    "dev": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "axios": "^1.0.0",
+    "axios": ">=1.0.0",
     "next": ">=13.4.0",
     "react": ">=17",
     "react-dom": ">=17"
@@ -68,14 +67,12 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "tsup": "^7.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "keywords": [
     "ramesesinc-lib",
     "ramesesinc-shared"
-  ],
-  "dependencies": {
-    "crypto-js": "^4.2.0",
-    "jsonwebtoken": "^9.0.2"
-  }
+  ]
 }

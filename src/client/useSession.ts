@@ -1,5 +1,5 @@
 import { fetchSessionId, verifySessionToken } from "../server/session";
-import useMongoAPI from "./useMongoAPI";
+import { useMongoAPI } from "./useMongoAPI";
 
 interface GetSessionInfoProps {
     tenant?: string | null;
@@ -55,8 +55,8 @@ class UseSessionImpl {
     }
 }
 
-const useSession = () => {
+export const useSession = () => {
     return new UseSessionImpl(); 
 };
 
-export default useSession;
+// export default useSession;

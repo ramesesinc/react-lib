@@ -16,7 +16,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@rameses/lib": ["src"]
+      "@rameses/lib": ["src"],
+      "@rameses/lib/*": ["src/*"],
     }
   },
   "include": ["src"],

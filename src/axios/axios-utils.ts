@@ -33,7 +33,7 @@ export const getAxiosError = ( err: any ) => {
         message = String(err.code); 
     }
 
-    return { status, message, cause: err }
+    return { status, message, cause: err, error: message }
 }; 
 
 export const getError = ( err: any ) => {
@@ -41,7 +41,7 @@ export const getError = ( err: any ) => {
         return getAxiosError( err ); 
     }
     else if ( err instanceof Error ) {
-        return { message: err.message, cause: err };
+        return { status: 500, message: err.message, cause: err, error: err.message };
     }
-    return { message: String(err) };
+    return { status: 500, message: String(err), error: String(err) };
 };

@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
-import useSession from "../client/useSession";
-import Platform from "../common/platform";
+import { useSession } from "../client/useSession";
+import { Platform } from "../common/platform";
 import mgmtAPI from "./api";
 
 interface UserServiceImplProps {
@@ -10,22 +10,22 @@ interface UserServiceImplProps {
 
 class UseServiceImpl {
 
-    private api: AxiosInstance; 
+    private client: AxiosInstance; 
     private props: UserServiceImplProps = {} as UserServiceImplProps; 
 
     constructor( tenant: string, module: string ) {
         this.props = { tenant, module }; 
-        this.api = mgmtAPI.createAxiosClient(); 
+        this.client = mgmtAPI.createAxiosClient(); 
     }
 
-    buildPath( serviceid: string, action: string ) {
+    buildPath( serviceid: string, action: string, type: string ) : string {
         const { tenant, module } = this.props; 
-        return `/services/resolve/${tenant}/${module}/${serviceid}/${action}`;
+        return `/services/${type}/${tenant}/${module}/${serviceid}/${action}`;
     }
 
     async resolve( serviceid: string, action: string ) {
-        const path = this.buildPath( serviceid, action ); 
-        const resp = await this.api.get( path ); 
+        const path = this.buildPath( serviceid, action, 'resolve' ); 
+        const resp = await this.client.get( path ); 
         const { data } = resp ?? {}; 
         return data; 
     } 
@@ -40,8 +40,8 @@ class UseServiceImpl {
         
         payload.env = this.createEnv( sessInfo?.env ); 
         
-        const path = this.buildPath( serviceid, action ); 
-        const resp = await this.api.post( path, payload ); 
+        const path = this.buildPath( serviceid, action, 'invoke' ); 
+        const resp = await this.client.post( path, payload ); 
         const { data } = resp ?? {}; 
         return data; 
     } 

@@ -1,5 +1,5 @@
 // src/index.ts
 
-export { generateHmacMD5, cn } from './common/utils';
+export { Platform } from './common/platform';
 
-export { default as Platform } from './common/platform';
+export { generateHmacMD5, cn } from './common/utils';

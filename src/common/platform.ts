@@ -7,7 +7,7 @@ const resolveContextPath = () : string => {
     return path;
 }
 
-const Platform = {
+export const Platform = {
 
     PLATFORM_NAME: ( process.env.PLATFORM_NAME ?? null ),
 
@@ -25,4 +25,4 @@ const Platform = {
     }
 }; 
 
-export default Platform;
+// export default Platform;

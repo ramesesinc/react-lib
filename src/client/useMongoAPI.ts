@@ -1,4 +1,6 @@
+import { AxiosInstance } from "axios";
 import AxiosBuilder from "../axios/axios-builder";
+import { Platform } from "../common/platform";
 import useConnection from "../mgmt-api/useConnection";
 
 interface MongoApiProps {
@@ -11,10 +13,16 @@ interface MongoApiProps {
 
 class MongoApiClass {
 
+    private client: AxiosInstance;
     private props: MongoApiProps = {} as MongoApiProps;
 
     constructor( props: MongoApiProps ) {
         this.props = { ...props };
+        this.client = AxiosBuilder.build({
+            callback: (config) => {
+                // console.log("MongoApiClass config.url => ", config.url); 
+            }
+        }); 
     }
 
     async getBasePath() {
@@ -33,7 +41,7 @@ class MongoApiClass {
             data.host = host.substring(0, host.lastIndexOf("/"));
         }
 
-        const paths = [data.host, process.env.PLATFORM_NAME, tenant, module];
+        const paths = [data.host, Platform.PLATFORM_NAME, tenant, module];
         basePath = paths.filter((item) => (item ?? null !== null)).join("/");
         this.props.basePath = basePath;
         return this.props.basePath; 
@@ -45,9 +53,8 @@ class MongoApiClass {
             reqPath = reqPath.substring(1); 
         }
         const basePath = await this.getBasePath(); 
-        const finalPath = [ basePath, reqPath ].join("/");
-        const client = AxiosBuilder.build();
-        const resp = await client.get( finalPath );
+        const finalPath = `${basePath}/${reqPath}`;
+        const resp = await this.client.get( finalPath );
         const { data } = resp ?? {};
         return data;
     }
@@ -58,9 +65,8 @@ class MongoApiClass {
             reqPath = reqPath.substring(1); 
         }
         const basePath = await this.getBasePath(); 
-        const finalPath = [ basePath, reqPath ].join("/");
-        const client = AxiosBuilder.build();
-        const resp = await client.post( finalPath, record );
+        const finalPath = `${basePath}/${reqPath}`; 
+        const resp = await this.client.post( finalPath, record );
         const { data } = resp ?? {};
         return data;
     }
@@ -72,15 +78,15 @@ interface UseMongoApiProps {
     connectionid?: string;
 }
 
-const useMongoAPI = ( props: UseMongoApiProps = {} ) => {
+export const useMongoAPI = ( props: UseMongoApiProps = {} ) => {
     let { tenant, module, connectionid } = (props ?? {}); 
 
     if (( tenant ?? '' ) === '' ) {
-        tenant = ((process.env.TENANT_NAME || process.env.NEXT_PUBLIC_TENANT_NAME) || "");
+        tenant = (Platform.TENANT_NAME || "");
     } 
     connectionid = ( connectionid ?? 'mongo-server' ); 
     const params = { connectionid, tenant, module };
     return new MongoApiClass( params as MongoApiProps ); 
 }; 
 
-export default useMongoAPI;
+// export default useMongoAPI;
