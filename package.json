@@ -1,0 +1,81 @@
+{
+  "name": "@ramesesinc/lib",
+  "version": "1.0.0",
+  "description": "Reusable Shared Libraries",
+  "author": "Rameses Systems Inc.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./axios": {
+      "import": "./dist/axios/index.mjs",
+      "require": "./dist/axios/index.js",
+      "types": "./dist/axios/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/index.mjs",
+      "require": "./dist/client/index.js",
+      "types": "./dist/client/index.d.ts"
+    },
+    "./local-api": {
+      "import": "./dist/local-api/index.mjs",
+      "require": "./dist/local-api/index.js",
+      "types": "./dist/local-api/index.d.ts"
+    },
+    "./mgmt-api": {
+      "import": "./dist/mgmt-api/index.mjs",
+      "require": "./dist/mgmt-api/index.js",
+      "types": "./dist/mgmt-api/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "types": "./dist/server/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "axios": "^1.0.0",
+    "next": ">=13.4.0",
+    "react": ">=17",
+    "react-dom": ">=17"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "axios": "^1.6.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsup": "^7.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "ramesesinc-lib",
+    "ramesesinc-shared"
+  ],
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
