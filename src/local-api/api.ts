@@ -30,6 +30,11 @@ const createAxiosClient = () => {
 
                 config.url = `${prefix}${urlPath}`;
             }
+
+            if ( !config.url.startsWith("/")) {
+                config.url = `/${config.url}`
+            }
+            
             console.log(`localAPI requestPath: ${config.url}`); 
         }
 
