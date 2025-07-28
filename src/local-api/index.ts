@@ -2,6 +2,8 @@
 
 export { default as localAPI } from './api';
 
-export { default as useModule } from './useModule';
+export { default as mgmtClient } from './mgmtClient';
 
-export { default as useService } from './useService';
+export { default as moduleClient } from './moduleClient';
+
+export { default as serviceClient } from './serviceClient';

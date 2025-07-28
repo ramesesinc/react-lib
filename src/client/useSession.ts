@@ -1,4 +1,4 @@
-import { fetchSessionId, verifySessionToken } from "../server/session";
+import { fetchSessionId, verifySessionToken } from "../server-actions";
 import { useMongoAPI } from "./useMongoAPI";
 
 interface GetSessionInfoProps {

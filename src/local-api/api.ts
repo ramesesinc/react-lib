@@ -30,6 +30,7 @@ const createAxiosClient = () => {
 
                 config.url = `${prefix}${urlPath}`;
             }
+            console.log(`localAPI requestPath: ${config.url}`); 
         }
 
         // Add the local API key header
@@ -47,7 +48,7 @@ const localAPI = {
     client: createAxiosClient(), 
 
     createAxiosClient, 
-
+    
     isPermitted: ( req: any ) => {
 
         if ( !req ) return false; 
@@ -65,7 +66,7 @@ const localAPI = {
         }
 
         return ( __LOCAL_API_KEY__ === reqApiKey ); 
-    }
+    },
 };
 
 export default localAPI; 

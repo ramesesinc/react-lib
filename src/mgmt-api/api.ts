@@ -10,6 +10,7 @@ const createAxiosClient = () => {
     return AxiosBuilder.build({ 
         baseURL: MGMT_SERVER_URI.trim(), 
         callback: (config) => {
+            console.log("mgmtAPI requestURL => ", `${config.baseURL}${config.url}`);
             // console.log("mgmtAPI config.baseURL", config.baseURL );
             // console.log("mgmtAPI config.url", config.url );
         } 
