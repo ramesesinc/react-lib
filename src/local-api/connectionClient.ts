@@ -7,10 +7,12 @@ type ConnectionInfo = Record<string, any>;
 
 class ConnectionAPIClass {
   private tenant: string;
+  private config: Record<string, any>;
   private client: AxiosInstance;
 
-  constructor(tenant: string) {
+  constructor(tenant: string, config: Record<string, any>) {
     this.tenant = tenant;
+    this.config = config;
     this.client = localAPI.createAxiosClient();
   }
 
@@ -36,9 +38,25 @@ class ConnectionAPIClass {
     }
   }
 
+  fillTemplate(template: string): string {
+    return template.replace(/\${(.*?)}/g, (_, key) => this.config[key] ?? `:${key}`);
+  }
+
   async execute(type: string, connectionID: string, body: Record<string, any>) {
+
     const resolveResult = (resp: any) => {
       const { data } = resp ?? {};
+      if (data != null && typeof data === 'object') {
+        const parsedData = Object.entries(data)
+          .filter(([_, v]) => typeof v === "string")
+          .reduce((acc, [k, v]) => {
+            acc[k] = this.fillTemplate(v as string);
+            return acc;
+          }, {} as Record<string, string>);
+
+        return { ...data, parsedData }
+      }
+
       return data;
     };
 
@@ -51,14 +69,14 @@ class ConnectionAPIClass {
   }
 }
 
-const ConnectionClient = (tenant?: string) => {
+const connectionClient = (tenant?: string, config?: Record<string, any>) => {
   let preferredTenant = tenant ?? Platform.TENANT_NAME ?? "";
 
   if (preferredTenant === "") {
     throw new Error("tenant is required in local-api/connectionClient");
   }
 
-  return new ConnectionAPIClass(preferredTenant);
+  return new ConnectionAPIClass(preferredTenant, config ?? {});
 };
 
-export default ConnectionClient;
+export default connectionClient;
