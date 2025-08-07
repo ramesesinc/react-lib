@@ -43,10 +43,9 @@ class ConnectionAPIClass {
   }
 
   async execute(type: string, connectionID: string, body: Record<string, any>) {
-
     const resolveResult = (resp: any) => {
       const { data } = resp ?? {};
-      if (data != null && typeof data === 'object') {
+      if (data != null && typeof data === "object") {
         const parsedData = Object.entries(data)
           .filter(([_, v]) => typeof v === "string")
           .reduce((acc, [k, v]) => {
@@ -54,7 +53,7 @@ class ConnectionAPIClass {
             return acc;
           }, {} as Record<string, string>);
 
-        return { ...data, parsedData }
+        return { ...data, ...parsedData };
       }
 
       return data;
@@ -62,7 +61,10 @@ class ConnectionAPIClass {
 
     const path = `/connections/${this.tenant}/${connectionID}`;
     if (type === "GET") {
-      return resolveResult(await this.client.get(path));
+      const result = await this.client.get(path);
+
+      const finalResult = resolveResult(result);
+      return finalResult;
     }
 
     throw new Error(`'${type}' not yet supported`);
