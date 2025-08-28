@@ -18,6 +18,17 @@ class UseModuleClass {
         const { data } = resp ?? {}; 
         return data; 
     } 
+
+    async post( module: string, body: Record<string, any> ) {
+        const path = `/modules/${this.tenant}/${module}`;
+        const resp = await this.client.post( path, body );
+        const { data } = resp ?? {};
+        return data; 
+    }
+
+    async getModules( body: Record<string, any> = {} ) {
+        return this.post("list", body ); 
+    }
 } 
 
 const useModule = ( props: { tenant?: string } ) => {
