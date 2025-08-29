@@ -5,6 +5,7 @@ interface GetSessionInfoProps {
     tenant?: string | null;
     module?: string | null;
     connectionid?: string | null;
+    sessionid?: string | null;
 }
 
 class UseSessionImpl {
@@ -17,8 +18,8 @@ class UseSessionImpl {
         }
     }
 
-    async getTokenInfo() { 
-        const token = await this.getToken(); 
+    async getTokenInfo( sessionID?: string ) { 
+        const token = ( sessionID == null ? await this.getToken() : sessionID );
         if (( token ?? '' ) === '') { 
             return null; 
         } 
@@ -27,6 +28,7 @@ class UseSessionImpl {
             const verifiedToken = await verifySessionToken( token! ); 
             return verifiedToken; 
         } catch(err) {
+            console.log(err);
             return null; 
         }
     }
@@ -37,8 +39,14 @@ class UseSessionImpl {
     }
 
     async getSessionInfo( props: GetSessionInfoProps = {} ) {
-        const sessionid = await this.getSessionId(); 
-        if ((sessionid ?? '') === '') {
+        const { sessionid } = props; 
+
+        let preferredSessionID: string | null = null; 
+        if ( sessionid == null ) {
+            preferredSessionID = await this.getSessionId(); 
+        }
+
+        if ((preferredSessionID ?? '') === '') {
             return null; 
         }
 
