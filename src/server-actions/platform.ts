@@ -180,8 +180,8 @@ async function requestServiceAction(type: string, serviceID: string, action: str
     assertRequired('action', action); 
 
     const client = mgmtAPI.createAxiosClient();
-    const path = `/services/${type}/${tenant}/${module}/${serviceID}/${action}`;
-    
+    const path = `/apis/${type}/${tenant}/${module}/${serviceID}/${action}`;
+
     const resolveResult = ( resp: any ) => {
         const { data } = resp ?? {};
         return data; 

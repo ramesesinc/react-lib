@@ -20,7 +20,7 @@ class UseServiceImpl {
 
     buildPath( serviceid: string, action: string, type: string ) : string {
         const { tenant, module } = this.props; 
-        return `/services/${type}/${tenant}/${module}/${serviceid}/${action}`;
+        return `/apis/${type}/${tenant}/${module}/${serviceid}/${action}`;
     }
 
     async resolve( serviceid: string, action: string ) {
