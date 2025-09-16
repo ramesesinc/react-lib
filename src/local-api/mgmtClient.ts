@@ -37,22 +37,19 @@ class MgmtClientClass {
 
     async execute( type: string, collection: string, action: string, body: any ) {
         const { tenant, module } = this.props; 
-        const paths = [ '/mgmt', tenant, module, collection, action ]; 
-        const path = paths.filter((item) => (item ?? null !== null)).join("/");
+        const requestData = {} as { path: string, type: string, body: unknown }
 
-        const resolveResult = ( resp: any ) => {
+        const paths = [ '/mgmt', tenant, module, collection, action ]; 
+        requestData.path = paths.filter((item) => (item ?? null !== null)).join("/");
+        requestData.type = type.toUpperCase(); 
+
+        if ( requestData.type === 'GET' || requestData.type === 'POST' ) {
+            const resp = await this.client.post('/invoke', requestData);
             const { data } = resp ?? {};
             return data; 
-        }
-
-        const uType = type.toUpperCase(); 
-        if ( uType === 'GET' ) {
-            return resolveResult ( await this.client.get( path ));
-        } else if ( uType === 'POST') {
-            return resolveResult ( await this.client.post( path, body ));
         } 
 
-        throw new Error(`'${type}' not yet supported`); 
+        throw new Error(`'${requestData.type}' not yet supported`); 
     }
 } 
 

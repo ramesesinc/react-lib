@@ -34,8 +34,6 @@ const createAxiosClient = () => {
             if (!config.url.startsWith("/")) {
                 config.url = `/${config.url}`
             }
-
-            console.log(`localAPI requestPath: ${config.url}`);
         }
 
         // Add the local API key header

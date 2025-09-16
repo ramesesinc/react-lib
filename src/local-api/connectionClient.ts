@@ -10,7 +10,7 @@ class ConnectionAPIClass {
   private config: Record<string, any>;
   private client: AxiosInstance;
 
-  constructor(tenant: string, config: Record<string, any>) {
+  constructor(tenant: string, config: Record<string, any> = {}) {
     this.tenant = tenant;
     this.config = config;
     this.client = localAPI.createAxiosClient();
@@ -59,12 +59,14 @@ class ConnectionAPIClass {
       return data;
     };
 
-    const path = `/connections/${this.tenant}/${connectionID}`;
-    if (type === "GET") {
-      const result = await this.client.get(path);
+    const requestData = {} as { path: string, type: string, data: unknown }
+    requestData.path = `/connections/${this.tenant}/${connectionID}`;
+    requestData.type = type.toUpperCase(); 
 
-      const finalResult = resolveResult(result);
-      return finalResult;
+    if (requestData.type === "GET") {
+      requestData.data = body;
+      const resp = await this.client.post('/invoke', requestData); 
+      return resolveResult(resp);
     }
 
     throw new Error(`'${type}' not yet supported`);

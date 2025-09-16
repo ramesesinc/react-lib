@@ -27,8 +27,11 @@ class ServiceClientClass {
     
     async resolve( serviceid: string, action: string ) {
         try {
-            const path = `/services/resolve/${this.tenant}/${this.module}/${serviceid}/${action}`;
-            const resp = await this.client.get( path ); 
+            const reqData = {} as { path: string, type: string, data: unknown }
+            reqData.path = `/apis/resolve/${this.tenant}/${this.module}/${serviceid}/${action}`;
+            reqData.type = 'GET';
+
+            const resp = await this.client.post('/invoke', reqData); 
             const { data } = resp ?? {}; 
             return data; 
         }
@@ -40,9 +43,11 @@ class ServiceClientClass {
 
     async invoke( serviceid: string, action: string, body: Record<string, any> ) {
         try {
-            const path = `/services/exec/${this.tenant}/${this.module}/${serviceid}/${action}`;
-            const reqParams = { url: path, method: 'POST', data: body } 
-            const resp = await this.client.request( reqParams ); 
+            const reqData = {} as { path: string, type: string, data: unknown }
+            reqData.path = `/apis/invoke/${this.tenant}/${this.module}/${serviceid}/${action}`;
+            reqData.type = 'POST';
+
+            const resp = await this.client.post('/invoke', reqData); 
             const { data } = resp ?? {}; 
             return data; 
         }

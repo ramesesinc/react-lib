@@ -38,18 +38,18 @@ class ModuleAPIClass {
     } 
 
     async execute( type: string, moduleID: string, body: Record<string, any> ) {
+        const requestData = {} as { path: string, type: string, data: unknown }
+        requestData.path = `/modules/${this.tenant}/${moduleID}`; 
+        requestData.type = type.toUpperCase(); 
 
-        const resolveResult = ( resp: any ) => {
+        if ( requestData.type === 'GET' ) {
+            requestData.data = body;
+            const resp = await this.client.post('/invoke', requestData);
             const { data } = resp ?? {};
             return data; 
-        }
-
-        const path = `/modules/${this.tenant}/${moduleID}`; 
-        if ( type === 'GET' ) {
-            return resolveResult( await this.client.get( path )); 
         } 
 
-        throw new Error(`'${type}' not yet supported`); 
+        throw new Error(`'${requestData.type}' not yet supported`); 
     }
 } 
 
