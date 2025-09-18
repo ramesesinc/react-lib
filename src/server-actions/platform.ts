@@ -7,6 +7,19 @@ import { getError } from "../axios/axios-utils";
 // 
 // connection actions
 // 
+export async function getPlatform() {
+    try {
+        const client = mgmtAPI.createAxiosClient();
+        const resp = await client.get('/platform/info');
+        const { data } = resp ?? {};
+        return data;
+    }
+    catch (err) {
+        const e = getError(err);
+        throw new Error(e.message);
+    }
+}
+
 export async function getConnection(connectionID: string, props?: { tenant?: string, module?: string }) {
     try {
         return await requestConnectionAction('GET', connectionID, props);
@@ -144,7 +157,7 @@ async function fetchModuleData(moduleID: string, props?: { tenant?: string }) {
 // 
 // service actions
 // 
-export async function resolveService(serviceID: string, action: string, props: { module: string, tenant?: string }) {
+export async function resolveService(serviceID: string, action: string, props: { module: string, tenant?: string, platform?: string }) {
     try {
         return await requestServiceAction('resolve', serviceID, action, {}, props);
     }
@@ -153,7 +166,7 @@ export async function resolveService(serviceID: string, action: string, props: {
         throw new Error(e.message);
     }
 }
-export async function invokeService(serviceID: string, action: string, body: Record<string, any>, props: { module: string, tenant?: string }) {
+export async function invokeService(serviceID: string, action: string, body: Record<string, any>, props: { module: string, tenant?: string, platform?: string }) {
     try {
         return await requestServiceAction('invoke', serviceID, action, body, props);
     }
@@ -163,7 +176,7 @@ export async function invokeService(serviceID: string, action: string, body: Rec
     }
 }
 
-async function requestServiceAction(type: string, serviceID: string, action: string, body: Record<string, any>, props: { module: string, tenant?: string }) {
+async function requestServiceAction(type: string, serviceID: string, action: string, body: Record<string, any>, props: { module: string, tenant?: string, platform?: string }) {
     let { tenant, module } = props ?? {};
 
     const assertRequired = (name: string, value: any) => {
@@ -181,7 +194,7 @@ async function requestServiceAction(type: string, serviceID: string, action: str
 
     const client = mgmtAPI.createAxiosClient();
     const path = `/apis/${type}/${tenant}/${module}/${serviceID}/${action}`;
-
+    console.log({ type, path }); 
     const resolveResult = (resp: any) => {
         const { data } = resp ?? {};
         return data;

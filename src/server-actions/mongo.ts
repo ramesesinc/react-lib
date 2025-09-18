@@ -8,19 +8,19 @@ const assertRequired = (name: string, value: unknown, category: string) => {
    }
 }
 
-export async function getMongoData(path: string, config?: { connectionid?: string, tenant?: string, module?: string }) {
+export async function getMongoData(path: string, config?: { connectionid?: string, tenant?: string, module?: string, platform?: string }) {
    assertRequired('path', path, 'getMongoData');
    return await requestMongoAction('GET', path, null, config);
 }
 
-export async function postMongoData(path: string, body: unknown, config?: { connectionid?: string, tenant?: string, module?: string }) {
+export async function postMongoData(path: string, body: unknown, config?: { connectionid?: string, tenant?: string, module?: string, platform?: string }) {
    assertRequired('path', path, 'postMongoData');
    assertRequired('body', body, 'postMongoData');
    return await requestMongoAction('POST', path, body, config);
 }
 
-async function requestMongoAction(type: string, path: string, body: unknown, config?: { connectionid?: string, tenant?: string, module?: string }) {
-   let { connectionid, tenant, module } = config ?? {};
+async function requestMongoAction(type: string, path: string, body: unknown, config?: { connectionid?: string, tenant?: string, module?: string, platform?: string }) {
+   let { connectionid, tenant, module, platform } = config ?? {};
 
    assertRequired('path', path, 'requestMongoAction');
 
@@ -45,7 +45,7 @@ async function requestMongoAction(type: string, path: string, body: unknown, con
       newPath = newPath.slice(1); 
    }
 
-   const paths = [ host, Platform.PLATFORM_NAME, tenant, module, newPath];
+   const paths = [ host, `${platform}`, tenant, module, newPath];
    const reqPath = paths.filter((item) => (item ?? null !== null)).join("/");
    const client = AxiosBuilder.build();
 
