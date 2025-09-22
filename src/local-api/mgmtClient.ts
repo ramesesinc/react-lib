@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
-import { Platform } from "../common/platform";
 import { getError } from "../axios";
+import { Platform } from "../common/platform";
 import localAPI from "./api";
 
 type MgmtClientClassProps = {
@@ -17,7 +17,17 @@ class MgmtClientClass {
   }
 
   async get(collection: string, action: string) {
+    console.log("===================");
+    console.log("ENTERING MGMTCLIENT");
+    console.log("===================");
     try {
+      if (action !== "list") {
+        const localData = localAPI.findMgmtResource(`/${collection}/${action}.json`);
+        if (localData != null) {
+          return localData;
+        }
+      }
+
       return await this.execute("GET", collection, action, {});
     } catch (err) {
       const e = getError(err);

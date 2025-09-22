@@ -74,8 +74,5 @@
   "keywords": [
     "ramesesinc-lib",
     "ramesesinc-shared"
-  ],
-  "dependencies": {
-    "build": "^0.1.4"
-  }
+  ]
 }
