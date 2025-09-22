@@ -17,17 +17,7 @@ class MgmtClientClass {
   }
 
   async get(collection: string, action: string) {
-    console.log("===================");
-    console.log("ENTERING MGMTCLIENT");
-    console.log("===================");
     try {
-      if (action !== "list") {
-        const localData = localAPI.findMgmtResource(`/${collection}/${action}.json`);
-        if (localData != null) {
-          return localData;
-        }
-      }
-
       return await this.execute("GET", collection, action, {});
     } catch (err) {
       const e = getError(err);
@@ -51,7 +41,7 @@ class MgmtClientClass {
     requestData.path = paths.filter((item) => item ?? null !== null).join("/");
     requestData.type = type.toUpperCase();
     requestData.data = body;
-    
+
     if ( type === 'GET' && action !== 'list' ) {
       requestData.filePath = `mgmt/${collection}/${action}.json`;
     }
