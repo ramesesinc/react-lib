@@ -36,13 +36,13 @@ class MgmtClientClass {
 
   async execute(type: string, collection: string, action: string, body: any) {
     const { tenant, module } = this.props;
-    const requestData = {} as { path: string; type: string; data: any, filePath: string };
+    const requestData = {} as { path: string; type: string; data: any; filePath: string };
     const paths = ["/mgmt", tenant, module, collection, action];
     requestData.path = paths.filter((item) => item ?? null !== null).join("/");
     requestData.type = type.toUpperCase();
     requestData.data = body;
 
-    if ( type === 'GET' && action !== 'list' ) {
+    if (type === "GET" && action !== "list") {
       requestData.filePath = `mgmt/${collection}/${action}.json`;
     }
 
