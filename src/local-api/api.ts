@@ -75,6 +75,30 @@ const localAPI = {
 
     return __LOCAL_API_KEY__ === reqApiKey;
   },
+
+  get: async (path: string) => {
+    const req = {
+      type: 'GET', 
+      path: path, 
+      data: {}
+    } 
+    const cl = createAxiosClient(); 
+    const resp = await cl.post('/invoke', req); 
+    const { data: result } = resp ?? {}
+    return result;
+  },
+
+  post: async (path: string, body: Record<string, any>) => {
+    const req = {
+      type: 'POST', 
+      path: path, 
+      data: body
+    } 
+    const cl = createAxiosClient(); 
+    const resp = await cl.post('/invoke', req); 
+    const { data: result } = resp ?? {}
+    return result;
+  }
 };
 
 export default localAPI;
