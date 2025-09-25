@@ -3,7 +3,7 @@ import { Platform } from "../common/platform";
 
 const __LOCAL_API_KEY__ = "4e3b5a2c-9c74-4e10-9c76-3a3deec6d3c2";
 
-const createAxiosClient = () => {
+const createAxiosClient = (baseURL?: string) => {
   const contextPath = Platform.CONTEXT_PATH;
 
   const callback: AxiosBuilderCallback = (config) => {
@@ -42,7 +42,7 @@ const createAxiosClient = () => {
     }
   };
 
-  return AxiosBuilder.build({ callback });
+  return AxiosBuilder.build({ callback, baseURL });
 };
 
 const findApiKey = (req: any, name: string) => {
