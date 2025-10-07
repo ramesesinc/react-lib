@@ -78,27 +78,34 @@ const localAPI = {
 
   get: async (path: string) => {
     const req = {
-      type: 'GET', 
-      path: path, 
-      data: {}
-    } 
-    const cl = createAxiosClient(); 
-    const resp = await cl.post('/invoke', req); 
-    const { data: result } = resp ?? {}
+      type: "GET",
+      path: path,
+      data: {},
+    };
+    const cl = createAxiosClient();
+    const resp = await cl.post("/invoke", req);
+    const { data: result } = resp ?? {};
     return result;
   },
 
   post: async (path: string, body: Record<string, any>) => {
     const req = {
-      type: 'POST', 
-      path: path, 
-      data: body
-    } 
-    const cl = createAxiosClient(); 
-    const resp = await cl.post('/invoke', req); 
-    const { data: result } = resp ?? {}
+      type: "POST",
+      path: path,
+      data: body,
+    };
+    const cl = createAxiosClient();
+    const resp = await cl.post("/invoke", req);
+    const { data: result } = resp ?? {};
     return result;
-  }
+  },
+
+  exec: async (path: string, body: Record<string, any>) => {
+    const cl = createAxiosClient();
+    const resp = await cl.post(path, body);
+    const { data: result } = resp ?? {};
+    return result;
+  },
 };
 
 export default localAPI;
