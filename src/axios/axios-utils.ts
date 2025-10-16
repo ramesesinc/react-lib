@@ -8,12 +8,16 @@ export const isAxiosError = ( err: unknown ): err is AxiosError => {
 export const getAxiosError = ( err: AxiosError ) => {
 
     const status = err.response?.status || 500;
-
+    
     const errors = ( 'errors' in err ) ? err.errors : [];
-
-    let message = null; 
-
+    if ( Array.isArray(errors) && errors.length > 0 ) {
+        const message = String(errors[0]); 
+        return { status, message, cause: err, error: message }  
+    }
+    
     if ( err.response && err.response?.data ) {
+        let message = 'Error'; 
+
         if (typeof err.response.data === "string") {
             message = err.response.data;
         } 
@@ -24,14 +28,15 @@ export const getAxiosError = ( err: AxiosError ) => {
         else if ( err.response.data ) {
             message = String(err.response.data);
         }
+
+        return { status, message, cause: err, error: message }  
     }
-    else if ( err.message ) {
+    
+    let message = 'Error'; 
+    
+    if ( err.message ) {
         message = err.message; 
-    }
-    else if ( errors && Array.isArray(errors) && errors.length > 0 ) {
-        const lastErr = errors[ errors.length - 1 ]; 
-        message = String(lastErr); 
-    }
+    } 
     else if ( err.code ) {
         message = String(err.code); 
     }
