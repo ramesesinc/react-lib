@@ -183,22 +183,9 @@ export async function invokeService(
   props: { module: string; tenant?: string; platform?: string }
 ) {
   try {
-    const token = await fetchSessionId();
-    if (token != null && token.trim() !== "") {
-      const tokenData = await verifySessionToken(token);
-      const newBody = {
-        env: {
-          ...(tokenData ?? {}),
-          CLIENTTYPE: "web",
-          USER_AGENT: `react-web/${process.env.PLATFORM_NAME}`,
-        },
-        args: body,
-      };
-      body = newBody;
-      console.log("BODY", body);
-    }
     return await requestServiceAction("invoke", serviceID, action, body, props);
-  } catch (err) {
+  }
+  catch (err) {
     const e = getError(err);
     throw new Error(e.message);
   }
@@ -228,7 +215,7 @@ async function requestServiceAction(
 
   const client = mgmtAPI.createAxiosClient();
   const path = `/apis/${type}/${tenant}/${module}/${serviceID}/${action}`;
-  console.log({ type, path });
+
   const resolveResult = (resp: any) => {
     const { data } = resp ?? {};
     return data;
@@ -236,8 +223,21 @@ async function requestServiceAction(
 
   if (type === "resolve") {
     return resolveResult(await client.get(path));
-  } else {
-    return resolveResult(await client.post(path, body));
+  }
+  else {
+    let reqBody = body;
+    const token = await fetchSessionId();
+    if (token != null && token.trim() !== "") {
+      const tokenData = await verifySessionToken(token);
+      reqBody = {
+        env: { ...(tokenData ?? {}), CLIENTTYPE: "web" },
+        args: body,
+      };
+
+      console.log("reqBody => ", reqBody);
+    }
+
+    return resolveResult(await client.post(path, reqBody));
   }
 }
 
