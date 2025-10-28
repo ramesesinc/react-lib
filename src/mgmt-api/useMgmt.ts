@@ -32,7 +32,7 @@ class UseMgmtClass {
 
   buildPath(collection: string, action: string) {
     const { tenant, module } = this.props;
-    const paths = ["/mgmt", tenant, module, collection, action];
+    const paths = ["/mgmt", tenant, module, collection, encodeURIComponent(action)];
     return paths.filter((item) => item ?? null !== null).join("/");
   }
 }
