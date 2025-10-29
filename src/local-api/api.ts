@@ -81,7 +81,7 @@ const localAPI = {
       type: "GET",
       path: path,
       data: {},
-    };
+    }
     const cl = createAxiosClient();
     const resp = await cl.post("/invoke", req);
     const { data: result } = resp ?? {};
@@ -93,7 +93,7 @@ const localAPI = {
       type: "POST",
       path: path,
       data: body,
-    };
+    }
     const cl = createAxiosClient();
     const resp = await cl.post("/invoke", req);
     const { data: result } = resp ?? {};

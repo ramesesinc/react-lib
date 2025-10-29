@@ -2,4 +2,4 @@
 
 export { Platform } from './common/platform';
 
-export { generateHmacMD5, cn } from './common/utils';
+export { generateHmacMD5, cn, AES } from './common/utils';
