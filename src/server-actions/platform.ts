@@ -3,18 +3,20 @@
 import { getError } from "../axios/axios-utils";
 import { Platform } from "../index";
 import { mgmtAPI } from "../mgmt-api";
-import { fetchSessionId, verifySessionToken } from "./session";
+import { buildSessionHeader } from "./session";
 
 //
 // connection actions
 //
 export async function getPlatform() {
   try {
+    const headers = await buildSessionHeader();
     const client = mgmtAPI.createAxiosClient();
-    const resp = await client.get("/platform/info");
+    const resp = await client.get("/platform/info", { headers });
     const { data } = resp ?? {};
     return data;
-  } catch (err) {
+  }
+  catch (err) {
     const e = getError(err);
     throw new Error(e.message);
   }
@@ -46,10 +48,11 @@ async function requestConnectionAction(
   assertRequired("tenant", tenant);
   assertRequired("connectionID", connectionID);
 
+  const headers = await buildSessionHeader();
   const client = mgmtAPI.createAxiosClient();
   const paths = ["/connections", tenant, module, connectionID];
   const path = paths.filter((item) => item ?? null !== null).join("/");
-  const resp = await client.get(path);
+  const resp = await client.get(path, { headers });
   const { data } = resp ?? {};
   return data;
 }
@@ -106,13 +109,14 @@ async function requestCollectionAction(
     return data;
   };
 
+  const headers = await buildSessionHeader();
   const client = mgmtAPI.createAxiosClient();
   const paths = ["/mgmt", tenant, module, collection, action];
   const path = paths.filter((item) => item != null).join("/");
   if (type === "GET") {
-    return resolveResult(await client.get(path));
+    return resolveResult(await client.get(path, { headers }));
   } else {
-    return resolveResult(await client.post(path, body));
+    return resolveResult(await client.post(path, body, { headers }));
   }
 }
 
@@ -154,9 +158,10 @@ async function fetchModuleData(moduleID: string, props?: { tenant?: string }) {
   assertRequired("tenant", tenant);
   assertRequired("moduleID", moduleID);
 
+  const headers = await buildSessionHeader();
   const client = mgmtAPI.createAxiosClient();
   const path = `/modules/${tenant}/${moduleID}`;
-  const resp = await client.get(path);
+  const resp = await client.get(path, { headers });
   const { data } = resp ?? {};
   return data;
 }
@@ -221,23 +226,13 @@ async function requestServiceAction(
     return data;
   };
 
+  const headers = await buildSessionHeader();
+
   if (type === "resolve") {
-    return resolveResult(await client.get(path));
+    return resolveResult(await client.get(path, { headers }));
   }
   else {
-    let reqBody = body;
-    const token = await fetchSessionId();
-    if (token != null && token.trim() !== "") {
-      const tokenData = await verifySessionToken(token);
-      reqBody = {
-        env: { ...(tokenData ?? {}), CLIENTTYPE: "web" },
-        args: body,
-      };
-
-      console.log("reqBody => ", reqBody);
-    }
-
-    return resolveResult(await client.post(path, reqBody));
+    return resolveResult(await client.post(path, body, { headers }));
   }
 }
 
@@ -273,9 +268,10 @@ async function requestTenantAction(tenant: string) {
 
   assertRequired("tenant", tenant);
 
+  const headers = await buildSessionHeader();
   const client = mgmtAPI.createAxiosClient();
   const path = `/tenants/${tenant}`;
-  const resp = await client.get(path);
+  const resp = await client.get(path, { headers });
   const { data } = resp ?? {};
   return data;
 }
@@ -330,7 +326,8 @@ async function requestDataSourceAction(
   };
 
   if (type === "GET") {
-    return resolveResult(await client.get(path));
+    const headers = await buildSessionHeader();
+    return resolveResult(await client.get(path, { headers }));
   } else {
     throw new Error(`'${type}' not supported in actions/local#requestDataSourceAction`);
   }
@@ -339,24 +336,28 @@ async function requestDataSourceAction(
 //
 // generic actions to the platform-server
 //
-export async function platformPostData(path: string, body: Record<string, any>) {
+export async function platformPostData(path: string, body: Record<string, any>, options?: Record<string, any>) {
   try {
+    const headers = await buildSessionHeader();
     const client = mgmtAPI.createAxiosClient();
-    const resp = await client.post(path, body);
+    const resp = await client.post(path, body, { headers });
     const { data } = resp ?? {};
     return data;
-  } catch (err) {
+  }
+  catch (err) {
     const e = getError(err);
     throw new Error(e.message);
   }
 }
 export async function platformGetData(path: string) {
   try {
+    const headers = await buildSessionHeader();
     const client = mgmtAPI.createAxiosClient();
-    const resp = await client.get(path);
+    const resp = await client.get(path, { headers });
     const { data } = resp ?? {};
     return data;
-  } catch (err) {
+  }
+  catch (err) {
     const e = getError(err);
     throw new Error(e.message);
   }
