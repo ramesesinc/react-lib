@@ -2,26 +2,28 @@
 
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { AES } from '../common/utils';
-
-const SESSION_KEY = "MDQyNjZiZGY2NmRjNjcwNGMzYTQ5YjJkMDM1YTA3MGQvM2Y3OTJmMjRiZGQyOTlmMWMxNjNmMjM1OGZiMTMwZjk="; 
 
 export type TokenData = {
-  SESSIONID: string, 
-  USERID: string; 
-  USERNAME: string; 
+  SESSIONID: string,
+  USERID: string;
+  USERNAME: string;
   FULLNAME: string;
 };
 
-export async function createSessionToken( data: TokenData ): Promise<string> {
-  return jwt.sign( data, SESSION_KEY, { expiresIn: '1d' }); 
+export async function createSessionToken(data: TokenData): Promise<string> {
+  const akey = (process.env.API_KEY ?? '').trim();
+  if (akey === '') {
+    throw new Error('API_KEY is not defined');
+  }
+  return jwt.sign(data, akey, { expiresIn: '1d' });
 }
 
-export async function verifySessionToken( token: string ): Promise<TokenData | null> {
+export async function verifySessionToken(token: string): Promise<TokenData | null> {
   try {
-    const decoded = jwt.verify(token, SESSION_KEY);
-    return decoded as TokenData;
-  } 
+    const akey = (process.env.API_KEY ?? '').trim();
+    const data = jwt.verify(token, akey);
+    return data as TokenData;
+  }
   catch (err) {
     console.error('Failed to verify session token: ', err);
     return null;
@@ -33,7 +35,7 @@ export async function fetchSessionId(): Promise<string | null> {
   return sessionId;
 }
 
-export async function saveSessionId( sessionid: string ): Promise<void> {
+export async function saveSessionId(sessionid: string): Promise<void> {
   (await cookies()).set("session", sessionid, {
     path: "/",
     httpOnly: true,
@@ -60,10 +62,7 @@ export async function buildSessionHeader(): Promise<Record<string, any>> {
       return headers;
     }
 
-    const data = await verifySessionToken(token);
-    if (data == null) return headers;
-
-    headers[key] = AES.encrypt(data);
+    headers[key] = token;
     return headers;
   }
   catch (err) {
