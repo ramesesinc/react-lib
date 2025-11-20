@@ -20,7 +20,7 @@ const createAxiosClient = (baseURL?: string) => {
         prePaths.push(contextPath);
       }
 
-      if (!config.url.startsWith("/api/")) {
+      if (!urlPath.startsWith("/api/")) {
         prePaths.push("api");
       }
 
