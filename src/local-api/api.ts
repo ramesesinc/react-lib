@@ -20,10 +20,15 @@ const createAxiosClient = (baseURL?: string) => {
         prePaths.push(contextPath);
       }
 
-      if (!urlPath.startsWith("/localapi")) {
+      if (!config.url.startsWith("/api/")) {
+        prePaths.push("api");
+      }
+
+      if (!urlPath.startsWith("/localapi/")) {
         prePaths.push("localapi");
       }
 
+      // console.log({ configUrl:config.url, prePaths }); 
       if (prePaths && prePaths.length > 0) {
         const prefix = prePaths.join("/");
         prePaths.length = 0;
